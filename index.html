@@ -99,8 +99,9 @@
                 const signal = controller.signal;
 
                 if (!e.target.value) return;
-
-                let data = await fetch(`http://localhost:3000/count?market=${market}&price=${price}&bed=${bed}&bath=${bath}`, { signal })
+                //https://rshackathon21.herokuapp.com/count
+                //http://localhost:3000/count
+                let data = await fetch(`https://rshackathon21.herokuapp.com/count?market=${market}&price=${price}&bed=${bed}&bath=${bath}`, { signal })
                     .then(results => results.json())
                 const currentCount = data[0].property_count;
 
