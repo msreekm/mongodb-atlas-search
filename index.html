@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<style>
+    label {
+        color: darkgrey;
+        font-size: x-large;
+    }
+
+    input {
+        border-radius: 10%;
+        border-color: darkgrey;
+        width: 20em;
+    }
+
+    .ui-widget {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #count {
+        color: lightgray;
+        margin-top: 2rem;
+        font-size: 8rem;
+        transition: all 4s;
+    }
+    input{
+        margin-top: 1.2rem;
+    }
+    span {
+        color: lightgray;
+        font-size: 2rem;
+    }
+</style>
+
+<body>
+    <div class="ui-widget">
+        <label for="market">Enter Search Term:</label><br />
+        <input id="market" placeholder="Market">
+        <input id="price" placeholder="Max Price">
+        <input id="bed" placeholder="Bed +">
+        <input id="bath" placeholder="Bath +">
+        <div id="count">0</div>
+        <span>listings found!</span>
+    </div>
+    <script>
+        //http://davidwalsh.name/javascript-debounce-function
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+        let controller;
+        let prevCount = 0;
+        let prevMarket, prevBed, prevBath ,prevPrice;
+
+        $(document).ready(function () {
+
+            $("#market,#price,#bed,#bath").keyup(debounce(async function (e) {
+
+ 
+               const market = $("#market").val()
+               let price = $("#price").val()
+
+               let bed = $("#bed").val()
+               let bath = $("#bath").val()
+
+               if(!bath) bath=1
+               if(!bed) bed=1
+               if (!price) price = 1
+
+                console.log('before fired.', market, price, bed, bath)
+
+               if(prevMarket ==market && prevBed==bed && prevBath==bath && prevPrice == price) return;
+                $("#count").text(0);
+
+               console.log('fired.', market, price,bed,bath)
+
+                if (controller) controller.abort();  //abort prev fetch!
+
+                controller = new AbortController();
+                const signal = controller.signal;
+
+                if (!e.target.value) return;
+
+                let data = await fetch(`http://localhost:3000/count?market=${market}&price=${price}&bed=${bed}&bath=${bath}`, { signal })
+                    .then(results => results.json())
+                const currentCount = data[0].property_count;
+
+                console.log('response', currentCount)
+                $("#count").text(currentCount);
+                prevMarket =market;
+                prevBed= bed;
+                prevBath = bath;
+                prevPrice = price;
+
+            }, 250));
+            /*    $("#recipe").autocomplete({
+                    source: async function (request, response) {
+                        let data = await fetch(`http://localhost:3000/search?query=${request.term}`)
+                            .then(results => results.json())
+                            .then(results => results.map(result => {
+                                return { label: result.address1, value: result.city, id: result.state_or_province };
+                            }));
+                        response(data);
+                    },
+                    minLength: 2,
+                    select: function (event, ui) {
+                        fetch(`http://localhost:3000/get/${ui.item.id}`)
+                            .then(result => result.json())
+                            .then(result => {
+                                $("#ingredients").empty();
+                                result.ingredients.forEach(ingredient => {
+                                    $("#ingredients").append(`<li>${ingredient}</li>`);
+                                });
+                            });
+                    }
+                }); */
+        });
+    </script>
+</body>
+
+</html>
