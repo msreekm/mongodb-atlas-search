@@ -58,7 +58,7 @@ server.get("/count", async (request, response) => {
                 {
                   range: {
                     path: "bedrooms",
-                    gte: request.query.bed ? Number(request.query.bed) : 1,
+                    lte: request.query.bed ? Number(request.query.bed) : 1,
                   },
                 },
                 {
