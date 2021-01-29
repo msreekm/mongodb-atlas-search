@@ -96,7 +96,7 @@ server.get("/get/:id", async (request, response) => {
   }
 });
 
-server.listen("3000", async () => {
+server.listen(process.env.PORT || "3000", async () => {
   try {
     await client.connect();
     collection = client.db("MLS").collection("Property");
