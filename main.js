@@ -58,7 +58,7 @@ server.get("/count", async (request, response) => {
                 {
                   range: {
                     path: "bedrooms",
-                    lte: request.query.bed ? Number(request.query.bed) : 1,
+                    gte: request.query.bed ? Number(request.query.bed) : 1,
                   },
                 },
                 {
@@ -70,7 +70,7 @@ server.get("/count", async (request, response) => {
                 {
                   range: {
                     path: "list_price",
-                    gte: request.query.price ? Number(request.query.price) : 1,
+                    lte: request.query.price ? Number(request.query.price) : 1,
                   },
                 },
               ],
