@@ -6,8 +6,8 @@ const { request } = require("express");
 
 const atlas =
   "mongodb+srv://admin:admin@cluster0.psqes.mongodb.net/MLS?retryWrites=true&w=majority";
-
-const client = new MongoClient(atlas);
+const client = await new MongoClient(atlas,{ useNewUrlParser: true});
+//const client = new MongoClient(atlas);
 const server = Express();
 
 server.use(BodyParser.json());
