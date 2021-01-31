@@ -34,13 +34,14 @@ server.get("/cities", async (request, response) => {
           },
         },
         {
-          $limit: 5,
-        },
-        {
           $project: {
             _id: 0,
             city: 1,
           },
+        },
+        { $group: { _id: "$state" } },
+        {
+          $limit: 10,
         },
       ])
       .toArray();
@@ -88,12 +89,6 @@ server.get("/count", async (request, response) => {
     markets = `city:${request.query.market1}`;
   }
 
-  console.log("markets", markets);
-  console.log(
-    request.query.market1,
-    request.query.market2,
-    request.query.market3
-  );
   try {
     let result = await collection
       .aggregate([
