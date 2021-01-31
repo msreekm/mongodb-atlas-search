@@ -6,7 +6,10 @@ const { request } = require("express");
 
 const atlas =
   "mongodb+srv://admin:admin@cluster0.psqes.mongodb.net/MLS?retryWrites=true&w=majority";
-const client =  new MongoClient(atlas,{ useNewUrlParser: true,useUnifiedTopology: true});
+const client = new MongoClient(atlas, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 //const client = new MongoClient(atlas);
 const server = Express();
 
@@ -16,6 +19,27 @@ server.use(Cors());
 
 var collection;
 
+//autocomplete locations
+server.get("/cities", async (request, response) => {
+  try {
+    let result = await collection
+      .aggregate([
+        {
+          $search: {
+            index: "city",
+            autocomplete: {
+              path: "city",
+              query: `${request.query.market}`,
+            },
+          },
+        },
+      ])
+      .toArray();
+    response.send(result);
+  } catch (e) {
+    response.status(500).send({ message: e.message });
+  }
+});
 server.get("/search", async (request, response) => {
   try {
     let result = await collection
