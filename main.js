@@ -74,6 +74,16 @@ server.get("/search", async (request, response) => {
   }
 });
 server.get("/count", async (request, response) => {
+  const markets = "";
+
+  if (!market1) {
+    markets = `city:${request.query.market1}`;
+  } else if (!market1 && !market2) {
+    markets = `city:${request.query.market1} OR city:${request.query.market2}`;
+  } else if (!market1 && !market2 && !market3) {
+    markets = `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3}`;
+  }
+
   try {
     let result = await collection
       .aggregate([
@@ -85,7 +95,7 @@ server.get("/count", async (request, response) => {
                 {
                   queryString: {
                     defaultPath: "city",
-                    query: `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3} AND property_sub_type:"Single Family Residence"`,
+                    query: `${markets} AND property_sub_type:"Single Family Residence"`,
                   },
                 },
                 {
