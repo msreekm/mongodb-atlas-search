@@ -76,7 +76,7 @@ server.get("/search", async (request, response) => {
 server.get("/count", async (request, response) => {
   const markets = "";
 
-  if (!request.query.market1) {
+  if (request.query.market1 !== "") {
     markets = `city:${request.query.market1}`;
   } else if (!request.query.market1 && !request.query.market2) {
     markets = `city:${request.query.market1} OR city:${request.query.market2}`;
@@ -88,6 +88,11 @@ server.get("/count", async (request, response) => {
     markets = `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3}`;
   }
   console.log("markets", markets);
+  console.log(
+    request.query.market1,
+    request.query.market2,
+    request.query.market3
+  );
   try {
     let result = await collection
       .aggregate([
