@@ -83,7 +83,7 @@ server.get("/count", async (request, response) => {
   } else if (!market1 && !market2 && !market3) {
     markets = `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3}`;
   }
-
+  console.log("markets", markets);
   try {
     let result = await collection
       .aggregate([
