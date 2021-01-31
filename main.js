@@ -85,7 +85,7 @@ server.get("/count", async (request, response) => {
                 {
                   queryString: {
                     defaultPath: "city",
-                    query: `city:${request.query.market}  AND property_sub_type:"Single Family Residence"`,
+                    query: `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3} AND property_sub_type:"Single Family Residence"`,
                   },
                 },
                 {
