@@ -34,14 +34,13 @@ server.get("/cities", async (request, response) => {
           },
         },
         {
+          $limit: 10,
+        },
+        {
           $project: {
             _id: 0,
             city: 1,
           },
-        },
-        { $group: { _id: "$state" } },
-        {
-          $limit: 10,
         },
       ])
       .toArray();
