@@ -74,16 +74,16 @@ server.get("/search", async (request, response) => {
   }
 });
 server.get("/count", async (request, response) => {
-  const markets = "";
+  let markets = "";
 
   if (request.query.market1 !== "") {
     markets = `city:${request.query.market1}`;
-  } else if (!request.query.market1 && !request.query.market2) {
+  } else if (request.query.market1 !== "" && request.query.market2 !== "") {
     markets = `city:${request.query.market1} OR city:${request.query.market2}`;
   } else if (
-    !request.query.market1 &&
-    !request.query.market2 &&
-    !request.query.market3
+    request.query.market1 !== "" &&
+    request.query.market2 !== "" &&
+    request.query.market3 !== ""
   ) {
     markets = `city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3}`;
   }
