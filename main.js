@@ -34,6 +34,9 @@ server.get("/cities", async (request, response) => {
           },
         },
         {
+          $limit: 5,
+        },
+        {
           $project: {
             _id: 0,
             city: 1,
