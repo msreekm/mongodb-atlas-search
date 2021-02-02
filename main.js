@@ -49,30 +49,31 @@ server.get("/cities", async (request, response) => {
     response.status(500).send({ message: e.message });
   }
 });
-server.get("/search", async (request, response) => {
-  try {
-    let result = await collection
-      .aggregate([
-        {
-          $search: {
-            index: "default",
-            text: {
-              query: `${request.query.market}`,
-              path: "city",
-              fuzzy: {
-                maxEdits: 2, //how many consecutive characters must match
-                prefixLength: 3, //number of characters at the beginning of each term in the result that must match exactly
-              },
-            },
-          },
-        },
-      ])
-      .toArray();
-    response.send(result);
-  } catch (e) {
-    response.status(500).send({ message: e.message });
-  }
-});
+
+// server.get("/search", async (request, response) => {
+//   try {
+//     let result = await collection
+//       .aggregate([
+//         {
+//           $search: {
+//             index: "default",
+//             text: {
+//               query: `${request.query.market}`,
+//               path: "city",
+//               fuzzy: {
+//                 maxEdits: 2, //how many consecutive characters must match
+//                 prefixLength: 3, //number of characters at the beginning of each term in the result that must match exactly
+//               },
+//             },
+//           },
+//         },
+//       ])
+//       .toArray();
+//     response.send(result);
+//   } catch (e) {
+//     response.status(500).send({ message: e.message });
+//   }
+// });
 server.get("/count", async (request, response) => {
   let markets = "";
 
@@ -126,6 +127,81 @@ server.get("/count", async (request, response) => {
         },
         {
           $count: "property_count",
+        },
+      ])
+      .toArray();
+    response.send(result);
+  } catch (e) {
+    response.status(500).send({ message: e.message });
+  }
+});
+server.get("/search", async (request, response) => {
+  let markets = "";
+
+  if (
+    request.query.market1 !== "" &&
+    request.query.market2 !== "" &&
+    request.query.market3 !== ""
+  ) {
+    markets = `(city:${request.query.market1} OR city:${request.query.market2} OR city:${request.query.market3})`;
+  } else if (request.query.market1 !== "" && request.query.market2 !== "") {
+    markets = `(city:${request.query.market1} OR city:${request.query.market2})`;
+  } else if (request.query.market1 !== "") {
+    markets = `city:${request.query.market1}`;
+  }
+
+  try {
+    let result = await collection
+      .aggregate([
+        {
+          $search: {
+            index: "custom",
+            compound: {
+              must: [
+                {
+                  queryString: {
+                    defaultPath: "city",
+                    query: `${markets} AND property_sub_type:"Single Family Residence"`,
+                  },
+                },
+                {
+                  range: {
+                    path: "bedrooms",
+                    gte: request.query.bed ? Number(request.query.bed) : 1,
+                  },
+                },
+                {
+                  range: {
+                    path: "bathrooms",
+                    gte: request.query.bath ? Number(request.query.bath) : 1,
+                  },
+                },
+                {
+                  range: {
+                    path: "list_price",
+                    lte: request.query.price ? Number(request.query.price) : 1,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          $limit: 50,
+        },
+        {
+          $project: {
+            _id: 0,
+            address1: 1,
+            city: 2,
+            state_or_province: 3,
+            postal_cod: 4,
+            bedrooms: 5,
+            bathrooms: 6,
+            square_feet: 7,
+            list_price: 8,
+            main_image_url: 9,
+          },
         },
       ])
       .toArray();
