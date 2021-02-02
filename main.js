@@ -201,6 +201,7 @@ server.get("/search", async (request, response) => {
             square_feet: 7,
             list_price: 8,
             main_image_url: 9,
+            grid_v2: 10,
           },
         },
       ])
