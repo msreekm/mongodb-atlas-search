@@ -194,6 +194,12 @@ server.get("/search", async (request, response) => {
                     lte: request.query.price ? Number(request.query.price) : 1,
                   },
                 },
+                {
+                  range: {
+                    path: "rent_estimate",
+                    gte: request.query.rent ? Number(request.query.rent) : 0,
+                  },
+                },
               ],
             },
           },
