@@ -127,6 +127,12 @@ server.get("/count", async (request, response) => {
                     gte: request.query.yield ? Number(request.query.yield) : 0,
                   },
                 },
+                {
+                  range: {
+                    path: "rent_estimate",
+                    gte: request.query.rent ? Number(request.query.rent) : 0,
+                  },
+                },
               ],
             },
           },
