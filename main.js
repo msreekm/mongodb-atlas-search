@@ -19,22 +19,21 @@ server.use(Cors());
 
 var collection;
 
-//autocomplete locations
-server.get("/cities", async (request, response) => {
+server.get("/address", async (request, response) => {
   try {
     let result = await collection
       .aggregate([
         {
           $search: {
-            index: "city",
+            index: "address",
             autocomplete: {
-              path: "city",
-              query: `${request.query.market}`,
+              path: "full_address",
+              query: `${request.query.address}`,
             },
           },
         },
         {
-          $limit: 5,
+          $limit: 10,
         },
         {
           $project: {
@@ -50,30 +49,37 @@ server.get("/cities", async (request, response) => {
   }
 });
 
-// server.get("/search", async (request, response) => {
-//   try {
-//     let result = await collection
-//       .aggregate([
-//         {
-//           $search: {
-//             index: "default",
-//             text: {
-//               query: `${request.query.market}`,
-//               path: "city",
-//               fuzzy: {
-//                 maxEdits: 2, //how many consecutive characters must match
-//                 prefixLength: 3, //number of characters at the beginning of each term in the result that must match exactly
-//               },
-//             },
-//           },
-//         },
-//       ])
-//       .toArray();
-//     response.send(result);
-//   } catch (e) {
-//     response.status(500).send({ message: e.message });
-//   }
-// });
+//autocomplete locations
+server.get("/cities", async (request, response) => {
+  try {
+    let result = await collection
+      .aggregate([
+        {
+          $search: {
+            index: "city",
+            autocomplete: {
+              path: "city",
+              query: `${request.query.market}`,
+            },
+          },
+        },
+        {
+          $limit: 10,
+        },
+        {
+          $project: {
+            _id: 0,
+            city: 1,
+          },
+        },
+      ])
+      .toArray();
+    response.send(result);
+  } catch (e) {
+    response.status(500).send({ message: e.message });
+  }
+});
+
 server.get("/count", async (request, response) => {
   let markets = "";
 
@@ -100,7 +106,7 @@ server.get("/count", async (request, response) => {
                 {
                   queryString: {
                     defaultPath: "city",
-                    query: `${markets} AND property_sub_type:"Single Family Residence"`,
+                    query: `${markets} AND cfs_property_type:${request.query.type}`,
                   },
                 },
                 {
@@ -119,18 +125,6 @@ server.get("/count", async (request, response) => {
                   range: {
                     path: "list_price",
                     lte: request.query.price ? Number(request.query.price) : 1,
-                  },
-                },
-                {
-                  range: {
-                    path: "yield",
-                    gte: request.query.yield ? Number(request.query.yield) : 0,
-                  },
-                },
-                {
-                  range: {
-                    path: "rent_estimate",
-                    gte: request.query.rent ? Number(request.query.rent) : 0,
                   },
                 },
               ],
@@ -173,7 +167,7 @@ server.get("/search", async (request, response) => {
                 {
                   queryString: {
                     defaultPath: "city",
-                    query: `${markets} AND property_sub_type:"Single Family Residence"`,
+                    query: `${markets} AND cfs_property_type:${request.query.type}`,
                   },
                 },
                 {
@@ -192,12 +186,6 @@ server.get("/search", async (request, response) => {
                   range: {
                     path: "list_price",
                     lte: request.query.price ? Number(request.query.price) : 1,
-                  },
-                },
-                {
-                  range: {
-                    path: "rent_estimate",
-                    gte: request.query.rent ? Number(request.query.rent) : 0,
                   },
                 },
               ],

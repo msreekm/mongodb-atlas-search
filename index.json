@@ -1,0 +1,52 @@
+{
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "bathrooms": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "bedrooms": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "city": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "list_price": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "cfs_property_type": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
+}
