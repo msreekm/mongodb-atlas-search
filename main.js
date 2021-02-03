@@ -121,6 +121,12 @@ server.get("/count", async (request, response) => {
                     lte: request.query.price ? Number(request.query.price) : 1,
                   },
                 },
+                {
+                  range: {
+                    path: "yield",
+                    gte: request.query.yield ? Number(request.query.yield) : 0,
+                  },
+                },
               ],
             },
           },
