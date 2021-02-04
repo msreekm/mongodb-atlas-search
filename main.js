@@ -38,7 +38,8 @@ server.get("/address", async (request, response) => {
         {
           $project: {
             _id: 0,
-            city: 1,
+            full_address: 1,
+            grid_v2: 2,
           },
         },
       ])
