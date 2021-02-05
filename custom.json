@@ -20,6 +20,15 @@
           "type": "number"
         }
       ],
+      "cfs_property_type": [
+        {
+          "dynamic": true,
+          "type": "document"
+        },
+        {
+          "type": "string"
+        }
+      ],
       "city": [
         {
           "dynamic": true,
@@ -36,15 +45,6 @@
         },
         {
           "type": "number"
-        }
-      ],
-      "cfs_property_type": [
-        {
-          "dynamic": true,
-          "type": "document"
-        },
-        {
-          "type": "string"
         }
       ]
     }
