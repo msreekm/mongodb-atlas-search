@@ -97,7 +97,7 @@ server.get("/count", async (request, response) => {
   }
 
   // ( cfs_property_type:\"xx\" OR cfs_property_type:\"House\")
-  const propertyTypes = request.query.type.split(",");
+  const propertyTypes = request.query.type;
 
   let str = "(";
   //   console.log(str.indexOf(","));
@@ -105,7 +105,7 @@ server.get("/count", async (request, response) => {
     // console.log("1");
     str = ` cfs_property_type:${propertyTypes} `;
   } else {
-    propertyTypes.forEach((type) => {
+    propertyTypes.split(",").forEach((type) => {
       str = str + ` cfs_property_type:${type} OR`;
     });
 
@@ -184,7 +184,7 @@ server.get("/search", async (request, response) => {
     markets = `city:${request.query.market1}`;
   }
   // ( cfs_property_type:\"xx\" OR cfs_property_type:\"House\")
-  const propertyTypes = request.query.type.split(",");
+  const propertyTypes = request.query.type;
 
   let str = "(";
   //   console.log(str.indexOf(","));
@@ -192,7 +192,7 @@ server.get("/search", async (request, response) => {
     // console.log("1");
     str = ` cfs_property_type:${propertyTypes} `;
   } else {
-    propertyTypes.forEach((type) => {
+    propertyTypes.split(",").forEach((type) => {
       str = str + ` cfs_property_type:${type} OR`;
     });
 
