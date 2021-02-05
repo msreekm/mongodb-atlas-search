@@ -101,7 +101,7 @@ server.get("/count", async (request, response) => {
 
   let str = "(";
   //   console.log(str.indexOf(","));
-  if (propertyTypes.indexOf(",") !== -1) {
+  if (propertyTypes.indexOf(",") === -1) {
     // console.log("1");
     str = ` cfs_property_type:${propertyTypes} `;
   } else {
@@ -188,7 +188,7 @@ server.get("/search", async (request, response) => {
 
   let str = "(";
   //   console.log(str.indexOf(","));
-  if (propertyTypes.indexOf(",") !== -1) {
+  if (propertyTypes.indexOf(",") === -1) {
     // console.log("1");
     str = ` cfs_property_type:${propertyTypes} `;
   } else {
