@@ -210,6 +210,7 @@ server.get("/search", async (request, response) => {
             main_image_url: 9,
             grid_v2: 10,
             on_market_date: 11,
+            photos_count: 12,
           },
         },
       ])
