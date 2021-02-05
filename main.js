@@ -209,6 +209,7 @@ server.get("/search", async (request, response) => {
             list_price: 8,
             main_image_url: 9,
             grid_v2: 10,
+            on_market_date: 11,
           },
         },
       ])
